@@ -1,0 +1,47 @@
+.modifyingButtons {
+    -fx-border-radius: 5px;
+    -fx-background-color: transparent;
+    -fx-border-color: black;
+    -fx-font-family: "Bodoni MT Black";
+    -fx-font-style: italic;
+    -fx-text-alignment: center;
+    -fx-font-size: 14px;
+}
+
+.modifyingButtons:hover {
+    -fx-border-color: black;
+    -fx-background-color: black;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+    -fx-border-radius: 5px;
+}
+
+
+#planTable {
+    -fx-border-color: black;
+    -fx-background-color: transparent;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-border-style: solid hidden hidden solid;
+}
+
+#timeColumn {
+    -fx-border-style: hidden solid hidden hidden;
+    -fx-border-width: 1;
+    -fx-border-color: black;
+}
+
+#todoColumn {
+    -fx-border-style: hidden;
+    -fx-border-width: 1;
+    -fx-border-color: black;
+}
+
+#dayOfTheWeek{
+    -fx-border-color: black;
+    -fx-background-color: transparent;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+}
+
+
