@@ -1,8 +1,8 @@
 .menuButtons{
-    -fx-border-radius: 5px;
+    -fx-border-radius: 20px;
     -fx-background-color: transparent;
     -fx-border-color: #f6b26b;
-    -fx-font-family: "Bodoni MT Black";
+    -fx-font-family: "Comic Sans MS";
     -fx-font-style: italic;
     -fx-text-fill: #f6b26b;
     -fx-text-alignment: center;
@@ -15,5 +15,6 @@
     -fx-background-color: #f6b26b;
     -fx-text-fill: white;
     -fx-cursor: hand;
-    -fx-border-radius: 5px;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
 }

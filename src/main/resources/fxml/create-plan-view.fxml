@@ -5,11 +5,14 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -19,7 +22,10 @@
          <children>
             <VBox fx:id="mainVBox" alignment="TOP_CENTER" layoutX="15.0" layoutY="97.0" prefHeight="275.0" prefWidth="155.0" spacing="10.0">
                <children>
-                  <DatePicker fx:id="datePicker" onAction="#getDate" prefWidth="150.0" promptText="Pick a date" />
+                  <DatePicker id="datePicker" fx:id="datePicker" onAction="#getDate" prefWidth="150.0" promptText="Pick a date">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></DatePicker>
                   <Button fx:id="addButton" mnemonicParsing="false" onAction="#addTask" prefHeight="70.0" prefWidth="150.0" styleClass="modifyingButtons" text="ADD" />
                   <VBox fx:id="menuVBox" prefHeight="200.0" prefWidth="100.0">
                      <children>
@@ -44,25 +50,48 @@
                   </VBox>
                </children>
             </VBox>
-            <Button id="prevButton" fx:id="prevButton" mnemonicParsing="false" onAction="#prevPage" prefHeight="35.0" prefWidth="41.0">
+            <Button id="prevButton" fx:id="prevButton" alignment="CENTER" layoutX="2.0" layoutY="2.0" mnemonicParsing="false" onAction="#prevPage" prefHeight="17.0" prefWidth="11.0" text="&lt;">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+         </children></AnchorPane>
+        <AnchorPane fx:id="planAnchorPane" nodeOrientation="LEFT_TO_RIGHT" prefHeight="400.0" prefWidth="481.0">
+            <children>
+                <Label fx:id="infoLabel" prefHeight="60.0" prefWidth="411.0" />
+            <Label id="dayOfTheWeek" fx:id="dayOfTheWeek" alignment="CENTER" layoutX="150.0" layoutY="13.0" prefHeight="35.0" prefWidth="200.0" textAlignment="CENTER">
+               <font>
+                  <Font name="Lucida Sans Demibold Italic" size="19.0" />
+               </font></Label>
+            <StackPane fx:id="tableStackPane" alignment="TOP_LEFT" layoutX="14.0" layoutY="60.0">
+               <children>
+                  <TableView id="planTable" fx:id="planTable" editable="true" nodeOrientation="LEFT_TO_RIGHT">
+                     <columns>
+                        <TableColumn id="timeColumn" fx:id="timeColumn" maxWidth="66.0" minWidth="66.0" prefWidth="66.0" resizable="false" sortable="false" text="Time" />
+                        <TableColumn id="todoColumn" fx:id="todoColumn" maxWidth="418.0" minWidth="375.0" prefWidth="418.0" resizable="false" sortable="false" text="Todo" />
+                     </columns>
+                  </TableView>
+                  <MenuButton id="timeMenuButton" fx:id="timeMenuButton" alignment="TOP_LEFT" mnemonicParsing="false" prefHeight="30.0" prefWidth="72.0">
+                     <items>
+                        <MenuItem fx:id="hour1MenuItem" mnemonicParsing="false" onAction="#onHour1" text="hour-1" />
+                        <MenuItem fx:id="hour2MenuItem" mnemonicParsing="false" onAction="#onHour2" text="hour-2" />
+                        <MenuItem fx:id="hour3MenuItem" mnemonicParsing="false" onAction="#onHour3" text="hour-3" />
+                        <MenuItem fx:id="hour6MenuItem" mnemonicParsing="false" onAction="#onHour6" text="hour-6" />
+                     </items>
+                  </MenuButton>
+               </children>
+            </StackPane>
+            <Button id="saveButton" fx:id="saveButton" alignment="CENTER" layoutX="444.0" layoutY="466.0" mnemonicParsing="false" onAction="#onSavePlan" prefHeight="17.0" prefWidth="56.0" text="Save">
+               <font>
+                  <Font name="Comic Sans MS" size="12.0" />
+               </font>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-         </children></AnchorPane>
-        <AnchorPane fx:id="planAnchorPane" prefHeight="400.0" prefWidth="481.0">
-            <children>
-                <TableView id="planTable" fx:id="planTable" editable="true" layoutX="14.0" layoutY="60.0" nodeOrientation="LEFT_TO_RIGHT">
-               <columns>
-                  <TableColumn id="timeColumn" fx:id="timeColumn" maxWidth="66.0" minWidth="66.0" prefWidth="66.0" resizable="false" text="Time" />
-                  <TableColumn id="todoColumn" fx:id="todoColumn" maxWidth="416.0" minWidth="375.0" prefWidth="416.0" resizable="false" sortable="false" text="Todo" />
-               </columns>
-                </TableView>
-                <Label fx:id="infoLabel" prefHeight="60.0" prefWidth="411.0" />
-            <Label id="dayOfTheWeek" fx:id="dayOfTheWeek" alignment="CENTER" layoutX="157.0" layoutY="13.0" prefHeight="35.0" prefWidth="200.0" textAlignment="CENTER">
-               <font>
-                  <Font name="Lucida Sans Demibold Italic" size="19.0" />
-               </font></Label>
             </children>
         </AnchorPane>
     </children>

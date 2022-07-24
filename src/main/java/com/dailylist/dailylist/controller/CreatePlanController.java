@@ -1,24 +1,17 @@
 package com.dailylist.dailylist.controller;
 
-import javafx.beans.Observable;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class CreatePlanController {
 
@@ -82,13 +75,30 @@ public class CreatePlanController {
     @FXML
     private Button prevButton;
 
-    ObservableList<Task> defaultTasks = FXCollections.observableArrayList();
-    ;
-    ObservableList<Task> taskList = FXCollections.observableArrayList();
-    ;
+    @FXML
+    private MenuItem hour1MenuItem;
+
+    @FXML
+    private MenuItem hour2MenuItem;
+
+    @FXML
+    private MenuItem hour3MenuItem;
+
+    @FXML
+    private MenuItem hour6MenuItem;
+
+    @FXML
+    private MenuButton timeMenuButton;
+
+    @FXML
+    StackPane tableStackPane;
+    @FXML
+    Button saveButton;
+    Map<TimeSchema, TaskTable> hours = new EnumMap<>(TimeSchema.class);
 
     public void initialize() {
-        configureHourChoiceBox();
+        createHours();
+        configureHourChoiceBox(TimeSchema.HOUR2);
         configureDayOfTheWeek();
         configureTimeColumn();
         configureTodoColumn();
@@ -107,18 +117,17 @@ public class CreatePlanController {
         todoColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDescription()));
     }
 
-    private void configureHourChoiceBox() {
-        for (LocalTime t : TimeSchemas.HOUR2.getTimeList()) {
+    private void configureHourChoiceBox(TimeSchema timeSchema) {
+        if (!hourChoiceBox.getItems().isEmpty())
+            hourChoiceBox.getItems().clear();
+        for (LocalTime t : timeSchema.getTimeList()) {
             hourChoiceBox.getItems().add(t);
         }
     }
 
     private void setDefaultTime() {
-        for (LocalTime t : TimeSchemas.HOUR2.getTimeList()) {
-            defaultTasks.add(new Task(t, ""));
-            taskList.add(new Task(t, ""));
-        }
-        planTable.setItems(defaultTasks);
+        TaskTable taskTable = new TaskTable(TimeSchema.HOUR2);
+        planTable.setItems(taskTable.getTasks());
     }
 
     public void getDate() {
@@ -132,19 +141,70 @@ public class CreatePlanController {
     }
 
     public void submitTask() {
+        if(!todoTextArea.getText().isEmpty() && !hourChoiceBox.getValue().toString().isEmpty()){
+            planTable.getItems()
+                    .stream()
+                    .filter(task -> task.getTime().equalsIgnoreCase(hourChoiceBox.getValue().toString()))
+                    .forEach(task -> task.setDescription(todoTextArea.getText()));
+            planTable.refresh();
+            resetAddingValues();
+        }
+    }
+
+    private void resetAddingValues() {
+        hourAndTodoVBox.setVisible(false);
+        hourChoiceBox.setValue(null);
+        todoTextArea.setText("");
+    }
+
+    private void createHours() {
+        hours.put(TimeSchema.HOUR1, new TaskTable(TimeSchema.HOUR1));
+        hours.put(TimeSchema.HOUR2, new TaskTable(TimeSchema.HOUR2));
+        hours.put(TimeSchema.HOUR3, new TaskTable(TimeSchema.HOUR3));
+        hours.put(TimeSchema.HOUR6, new TaskTable(TimeSchema.HOUR6));
+    }
+
+    public void onHour1() {
+        setHourDiff(hours.get(TimeSchema.HOUR1));
+        configureHourChoiceBox(TimeSchema.HOUR1);
+    }
+
+    public void onHour2() {
+        setHourDiff(hours.get(TimeSchema.HOUR2));
+        configureHourChoiceBox(TimeSchema.HOUR2);
+    }
+
+    public void onHour3() {
+        setHourDiff(hours.get(TimeSchema.HOUR3));
+        configureHourChoiceBox(TimeSchema.HOUR3);
+    }
+
+    public void onHour6() {
+        setHourDiff(hours.get(TimeSchema.HOUR6));
+        configureHourChoiceBox(TimeSchema.HOUR6);
+    }
+
+    public void setHourDiff(TaskTable taskTable) {
 
         planTable.getItems()
                 .stream()
-                .filter(task -> task.getTime().equalsIgnoreCase(hourChoiceBox.getValue().toString()))
-                .forEach(task -> task.setDescription(todoTextArea.getText()));
+                .filter(task -> !task.getDescription().isEmpty())
+                .forEach(task ->
+                        taskTable.getTasks().stream()
+                                .filter(t -> t.getTime().equals(task.getTime()))
+                                .forEach(nt -> nt.setDescription(task.getDescription()))
+                );
+        planTable.setItems(taskTable.getTasks());
         planTable.refresh();
-        hourAndTodoVBox.setVisible(false);
     }
 
-    public void prevPage(){
+    public void onSavePlan(){
+       
+    }
+
+    public void prevPage() {
         ViewSwitcher.switchTo(View.MENU);
     }
-
 }
 
 

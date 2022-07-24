@@ -2,18 +2,41 @@
     -fx-border-radius: 5px;
     -fx-background-color: transparent;
     -fx-border-color: black;
-    -fx-font-family: "Bodoni MT Black";
+    -fx-font-family: "Comic Sans MS";
     -fx-font-style: italic;
     -fx-text-alignment: center;
     -fx-font-size: 14px;
 }
 
-.modifyingButtons:hover,#submitButton:hover {
+.modifyingButtons:hover,#submitButton:hover{
     -fx-border-color: black;
     -fx-background-color: black;
     -fx-text-fill: white;
     -fx-cursor: hand;
     -fx-border-radius: 5px;
+}
+
+.table-row-cell:hover {
+    -fx-background-color:orange;
+}
+.choice-box .menu-item > .label {
+    -fx-text-fill: black;
+}
+
+.choice-box .menu-item:focused {
+    -fx-background-color: orange;
+}
+.table-row-cell:focused {
+    -fx-background-color: orange;
+}
+
+#saveButton{
+    -fx-font-family: "Comic Sans MS";
+    -fx-font-size: 13px;
+    -fx-border-color: black;
+    -fx-background-color: green;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
 }
 
 
@@ -22,32 +45,49 @@
     -fx-background-color: transparent;
     -fx-border-width: 1px;
     -fx-border-radius: 5px;
+    -fx-font-family: "Comic Sans MS";
+    -fx-font-size: 14;
 }
 
 #timeColumn {
-    -fx-border-style: hidden solid hidden hidden;
+    -fx-border-style: hidden solid solid hidden;
     -fx-border-width: 1;
     -fx-border-color: black;
     -fx-alignment: center;
 }
 
 #todoColumn {
-    -fx-border-style: hidden;
+    -fx-border-style: hidden hidden solid hidden;
     -fx-border-width: 1;
     -fx-border-color: black;
 }
 
-#dayOfTheWeek, #hourChoiceBox, #todoTextArea, #submitButton{
+#dayOfTheWeek, #hourChoiceBox, #todoTextArea, #submitButton, #datePicker{
     -fx-border-color: black;
     -fx-background-color: transparent;
     -fx-border-width: 1px;
     -fx-border-radius: 5px;
+    -fx-font-family: "Comic Sans MS";
+}
+#prevButton{
+    -fx-border-radius: 25;
+    -fx-background-radius: 25;
+    -fx-background-color: transparent;
+    -fx-border-color: black;
 }
 
-#prevButton{
-    -fx-background-image: url("../png/plain-arrow.png");
+#timeMenuButton{
     -fx-background-color: transparent;
 }
+#dayOfTheWeek{
+    -fx-text-fill: orange;
+    -fx-font-size: 24;
+}
+
+
+
+
+
 
 
 

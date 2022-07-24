@@ -35,23 +35,6 @@ public class Task {
                 '}';
     }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        final Task task = (Task) o;
-
-        if (time != null ? !time.equals(task.time) : task.time != null) return false;
-        return description != null ? description.equals(task.description) : task.description == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = time != null ? time.hashCode() : 0;
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        return result;
-    }
 }
 
 
