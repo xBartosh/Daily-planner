@@ -1,12 +1,15 @@
 package com.dailylist.dailylist.controller;
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 
 import java.time.LocalDate;
@@ -16,7 +19,10 @@ import java.util.*;
 public class CreatePlanController {
 
     @FXML
-    private Button addButton;
+    private HBox sceneHBox;
+
+    @FXML
+    private AnchorPane planAnchorPane;
 
     @FXML
     private DatePicker datePicker;
@@ -25,37 +31,13 @@ public class CreatePlanController {
     private Label dayOfTheWeek;
 
     @FXML
-    private VBox hourAndTodoVBox;
+    private Button prevButton;
 
     @FXML
-    private ChoiceBox<LocalTime> hourChoiceBox;
-
-    @FXML
-    private Label hourLabel;
-
-    @FXML
-    private VBox hourVBox;
-
-    @FXML
-    private Label infoLabel;
-
-    @FXML
-    private VBox mainVBox;
-
-    @FXML
-    private AnchorPane menuAnchorPane;
-
-    @FXML
-    private VBox menuVBox;
-
-    @FXML
-    private AnchorPane planAnchorPane;
+    StackPane tableStackPane;
 
     @FXML
     private TableView<Task> planTable;
-
-    @FXML
-    private HBox sceneHBox;
 
     @FXML
     private TableColumn<Task, String> timeColumn;
@@ -64,16 +46,7 @@ public class CreatePlanController {
     private TableColumn<Task, String> todoColumn;
 
     @FXML
-    private Label todoLabel;
-
-    @FXML
-    private TextArea todoTextArea;
-
-    @FXML
-    private Button submitButton;
-
-    @FXML
-    private Button prevButton;
+    private MenuButton timeMenuButton;
 
     @FXML
     private MenuItem hour1MenuItem;
@@ -88,17 +61,20 @@ public class CreatePlanController {
     private MenuItem hour6MenuItem;
 
     @FXML
-    private MenuButton timeMenuButton;
+    Button saveButton;
 
     @FXML
-    StackPane tableStackPane;
-    @FXML
-    Button saveButton;
-    Map<TimeSchema, TaskTable> hours = new EnumMap<>(TimeSchema.class);
+    Button clearButton;
+
+    TableView<Task> getPlanTable() {
+        return planTable;
+    }
+
+    static Map<TimeSchema, TaskTable> hours = new EnumMap<>(TimeSchema.class);
+    static TimeSchema acutalTimeSchema;
 
     public void initialize() {
         createHours();
-        configureHourChoiceBox(TimeSchema.HOUR2);
         configureDayOfTheWeek();
         configureTimeColumn();
         configureTodoColumn();
@@ -115,46 +91,37 @@ public class CreatePlanController {
 
     private void configureTodoColumn() {
         todoColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDescription()));
+        todoColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        todoColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Task, String>>() {
+            @Override
+            public void handle(final TableColumn.CellEditEvent<Task, String> taskStringCellEditEvent) {
+                planTable.getItems()
+                        .stream()
+                        .filter(task -> task.getTime().equals(taskStringCellEditEvent.getRowValue().getTime()))
+                        .forEach(task -> {
+                            task.setDescription(taskStringCellEditEvent.getNewValue());
+                            hours.get(acutalTimeSchema)
+                                    .getTasks().stream()
+                                    .filter(task1 -> task1.getTime().equals(task.getTime()))
+                                    .forEach(task2->task2.setDescription(taskStringCellEditEvent.getNewValue()));
+                        });
+
+                planTable.refresh();
+            }
+        });
     }
 
-    private void configureHourChoiceBox(TimeSchema timeSchema) {
-        if (!hourChoiceBox.getItems().isEmpty())
-            hourChoiceBox.getItems().clear();
-        for (LocalTime t : timeSchema.getTimeList()) {
-            hourChoiceBox.getItems().add(t);
-        }
-    }
 
     private void setDefaultTime() {
         TaskTable taskTable = new TaskTable(TimeSchema.HOUR2);
         planTable.setItems(taskTable.getTasks());
+        acutalTimeSchema = TimeSchema.HOUR2;
     }
 
     public void getDate() {
         dayOfTheWeek.setText(datePicker.getValue()
                 .getDayOfWeek()
                 .toString());
-    }
-
-    public void addTask() {
-        hourAndTodoVBox.setVisible(true);
-    }
-
-    public void submitTask() {
-        if(!todoTextArea.getText().isEmpty() && !hourChoiceBox.getValue().toString().isEmpty()){
-            planTable.getItems()
-                    .stream()
-                    .filter(task -> task.getTime().equalsIgnoreCase(hourChoiceBox.getValue().toString()))
-                    .forEach(task -> task.setDescription(todoTextArea.getText()));
-            planTable.refresh();
-            resetAddingValues();
-        }
-    }
-
-    private void resetAddingValues() {
-        hourAndTodoVBox.setVisible(false);
-        hourChoiceBox.setValue(null);
-        todoTextArea.setText("");
     }
 
     private void createHours() {
@@ -166,22 +133,23 @@ public class CreatePlanController {
 
     public void onHour1() {
         setHourDiff(hours.get(TimeSchema.HOUR1));
-        configureHourChoiceBox(TimeSchema.HOUR1);
+        acutalTimeSchema = TimeSchema.HOUR1;
     }
 
     public void onHour2() {
         setHourDiff(hours.get(TimeSchema.HOUR2));
-        configureHourChoiceBox(TimeSchema.HOUR2);
+        acutalTimeSchema = TimeSchema.HOUR2;
     }
 
     public void onHour3() {
         setHourDiff(hours.get(TimeSchema.HOUR3));
-        configureHourChoiceBox(TimeSchema.HOUR3);
+        acutalTimeSchema = TimeSchema.HOUR3;
+
     }
 
     public void onHour6() {
         setHourDiff(hours.get(TimeSchema.HOUR6));
-        configureHourChoiceBox(TimeSchema.HOUR6);
+        acutalTimeSchema = TimeSchema.HOUR6;
     }
 
     public void setHourDiff(TaskTable taskTable) {
@@ -198,12 +166,23 @@ public class CreatePlanController {
         planTable.refresh();
     }
 
-    public void onSavePlan(){
-       
+    public void onSavePlan() {
+        new SaveView();
     }
 
     public void prevPage() {
         ViewSwitcher.switchTo(View.MENU);
+
+    }
+
+    public void onClearPlan(){
+        planTable.getItems().stream()
+                .filter(task->!task.getDescription().isEmpty())
+                .forEach(task -> {
+                    task.setDescription("");
+                });
+        hours.get(acutalTimeSchema).getTasks().stream().forEach(task -> task.setDescription(""));
+        planTable.refresh();
     }
 }
 

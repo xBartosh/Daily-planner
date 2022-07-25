@@ -1,0 +1,13 @@
+#saveButton, #cancelButton{
+    -fx-font-family: "Comic Sans MS";
+    -fx-font-size: 13px;
+
+}
+
+#saveButton{
+    -fx-background-color: green;
+}
+
+#cancelButton{
+    -fx-background-color: gray;
+}

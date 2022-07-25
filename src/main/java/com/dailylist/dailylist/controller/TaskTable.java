@@ -38,12 +38,6 @@ class TaskTable {
         }
     }
 
-    public void changeTimeSchema(TimeSchema timeSchema){
-        this.timeSchema = timeSchema;
-        this.tasks.removeAll();
-        createTimeList();
-
-    }
 
     @Override
     public boolean equals(final Object o) {

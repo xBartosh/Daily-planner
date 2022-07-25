@@ -6,6 +6,6 @@
 <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" style="-fx-spacing: 80; -fx-background-color: white;" stylesheets="@../css/menu.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dailylist.dailylist.controller.MenuController">
     <children>
         <Button fx:id="createPlanButton" alignment="CENTER" mnemonicParsing="false" onAction="#onCreatePlanButton" prefHeight="230.0" prefWidth="230.0" styleClass="menuButtons" text="Create&#10; plan" />
-        <Button fx:id="yourPlansButton" alignment="CENTER" mnemonicParsing="false" prefHeight="230.0" prefWidth="230.0" styleClass="menuButtons" text="Your&#10;plans" />
+        <Button fx:id="yourPlansButton" alignment="CENTER" mnemonicParsing="false" onAction="#onYourPlansButton" prefHeight="230.0" prefWidth="230.0" styleClass="menuButtons" text="Your&#10;plans" />
     </children>
 </HBox>

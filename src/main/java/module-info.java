@@ -8,6 +8,7 @@ module com.dailylist.dailylist {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
     requires com.almasb.fxgl.all;
+    requires java.sql;
 
     exports com.dailylist.dailylist.controller;
     opens com.dailylist.dailylist.controller to javafx.fxml;

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="104.0" prefWidth="225.0" stylesheets="@../css/save.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dailylist.dailylist.controller.SaveController">
+   <children>
+      <Button id="saveButton" fx:id="saveButton" layoutX="148.0" layoutY="60.0" mnemonicParsing="false" onAction="#onSave" prefHeight="25.0" prefWidth="52.0" text="Save">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor></Button>
+      <TextField fx:id="nameTextField" layoutX="51.0" layoutY="18.0" />
+      <Button id="cancelButton" fx:id="cancelButton" layoutX="84.0" layoutY="60.0" mnemonicParsing="false" onAction="#onCancel" text="Cancel">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor></Button>
+      <Label fx:id="nameLabel" layoutX="14.0" layoutY="22.0" text="Name" />
+   </children>
+</AnchorPane>

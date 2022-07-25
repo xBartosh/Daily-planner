@@ -19,26 +19,39 @@
 .table-row-cell:hover {
     -fx-background-color:orange;
 }
-.choice-box .menu-item > .label {
-    -fx-text-fill: black;
-}
 
-.choice-box .menu-item:focused {
-    -fx-background-color: orange;
-}
 .table-row-cell:focused {
     -fx-background-color: orange;
+}
+
+.table-view *.scroll-bar:horizontal *.increment-button,
+.table-view *.scroll-bar:horizontal *.decrement-button {
+    -fx-background-color: null;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.table-view *.scroll-bar:horizontal *.increment-arrow,
+.table-view *.scroll-bar:horizontal *.decrement-arrow {
+    -fx-background-color: null;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-shape: null;
 }
 
 #saveButton{
     -fx-font-family: "Comic Sans MS";
     -fx-font-size: 13px;
-    -fx-border-color: black;
     -fx-background-color: green;
-    -fx-border-radius: 10px;
-    -fx-background-radius: 10px;
 }
 
+#clearButton{
+    -fx-font-family: "Comic Sans MS";
+    -fx-font-size: 13px;
+    -fx-background-color: gray;
+}
 
 #planTable {
     -fx-border-color: black;
@@ -62,7 +75,7 @@
     -fx-border-color: black;
 }
 
-#dayOfTheWeek, #hourChoiceBox, #todoTextArea, #submitButton, #datePicker{
+#dayOfTheWeek, #datePicker{
     -fx-border-color: black;
     -fx-background-color: transparent;
     -fx-border-width: 1px;
@@ -79,6 +92,16 @@
 #timeMenuButton{
     -fx-background-color: transparent;
 }
+
+.menu-item:focused, .menu-item:hover {
+    -fx-background-color: orange;
+    -fx-text-fill: black;
+}
+
+.menu-item:focused .label, .menu-item:hover .label {
+    -fx-text-fill: black;
+}
+
 #dayOfTheWeek{
     -fx-text-fill: orange;
     -fx-font-size: 24;

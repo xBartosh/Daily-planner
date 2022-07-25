@@ -12,9 +12,14 @@ public class MenuController {
     @FXML
     private Button yourPlansButton;
 
+
     @FXML
     public void onCreatePlanButton(){
         ViewSwitcher.switchTo(View.CREATEPLAN);
     }
 
+    @FXML
+    public void onYourPlansButton(){
+        ViewSwitcher.switchTo(View.YOURPLANS);
+    }
 }
