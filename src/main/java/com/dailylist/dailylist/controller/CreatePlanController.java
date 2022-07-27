@@ -72,6 +72,7 @@ public class CreatePlanController {
 
     static Map<TimeSchema, TaskTable> hours = new EnumMap<>(TimeSchema.class);
     static TimeSchema acutalTimeSchema;
+    static LocalDate actualDate;
 
     public void initialize() {
         createHours();
@@ -83,6 +84,8 @@ public class CreatePlanController {
 
     private void configureDayOfTheWeek() {
         dayOfTheWeek.setText(LocalDate.now().getDayOfWeek().toString());
+        String[] split = LocalDate.now().toString().split("-");
+        actualDate = LocalDate.of(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]));
     }
 
     private void configureTimeColumn() {
@@ -122,6 +125,9 @@ public class CreatePlanController {
         dayOfTheWeek.setText(datePicker.getValue()
                 .getDayOfWeek()
                 .toString());
+        String[] split = datePicker.getValue().toString().split("-");
+        actualDate = LocalDate.of(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]));
+        System.out.println(actualDate);
     }
 
     private void createHours() {

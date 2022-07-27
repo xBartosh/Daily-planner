@@ -3,6 +3,7 @@ package com.dailylist.dailylist.controller;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -15,9 +16,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class YourPlansController {
 
@@ -50,48 +51,59 @@ public class YourPlansController {
         ViewSwitcher.switchTo(View.MENU);
     }
 
+    List<String> tableNames = new ArrayList();
+    List<String> tableDates = new ArrayList();
+
+    List<String> tableDays = new ArrayList<>();
+
+    ObservableList<Plan> plans = FXCollections.observableArrayList();
+    FilteredList<Plan> filteredPlans;
+
     public void initialize() throws SQLException {
+        new DatabaseConnection();
         configureNameColumn();
         configureDateColumn();
         configureDayColumn();
-        new DatabaseConnection();
-        ObservableList<Plan> plans = FXCollections.observableArrayList();
+        selectDataFromDatabaseAndAddToLists();
+        addItemsToPlans();
+        searchListener();
+        filteredPlans = new FilteredList<>(FXCollections.observableList(plans));
+        plansTableView.setItems(filteredPlans);
+        plansTableView.refresh();
+    }
 
-        System.out.println("SELECT create_time FROM INFORMATION_SCHEMA.TABLES" +
-                "   WHERE table_schema = 'dailyplanner'" +
-                "   AND table_name = 'plannerwtorek';");
-
-
+    private void selectDataFromDatabaseAndAddToLists() throws SQLException {
         DatabaseMetaData metaData = DatabaseConnection.getConnection().getMetaData();
         String[] types = {"TABLE"};
         ResultSet tables = metaData.getTables(null, null, "%", types);
         Statement statement = DatabaseConnection.getConnection().createStatement();
 
-        List<String> tableNames = new ArrayList();
-        List<String> tableDates = new ArrayList();
         int i =0;
         while (tables.next()) {
             tableNames.add(tables.getString("TABLE_NAME"));
-            ResultSet resultSet = statement.executeQuery("SELECT create_time FROM INFORMATION_SCHEMA.TABLES" +
-                    "   WHERE table_schema = 'dailyplanner'" +
-                    "   AND table_name = '"+ tableNames.get(i)+"';");
+            ResultSet resultSet = statement.executeQuery("SELECT date FROM " + tables.getString("TABLE_NAME") + " WHERE date IS NOT NULL;");
             while (resultSet.next()){
-                tableDates.add(resultSet.getString(1).substring(0,10));
+                tableDates.add(resultSet.getString(1));
             }
             i++;
-
-            // TO DO
-            // SUBSTRING DATE SO YOU CAN GET A DAY FROM IT
-            // ADD THIS DATA TO TABLE VIEW
         }
-        System.out.println(tableNames);
-        System.out.println(tableDates);
+        getDayFromDateAndAddToList();
+    }
 
+    private void getDayFromDateAndAddToList(){
+        String[] sub;
+        LocalDate localDate;
+        for (String s: tableDates) {
+            sub = s.split("-");
+            localDate = LocalDate.of(Integer.parseInt(sub[0]), Integer.parseInt(sub[1]), Integer.parseInt(sub[2]));
+            tableDays.add(localDate.getDayOfWeek().toString());
+        }
+    }
 
-
-
-
-
+    private void addItemsToPlans(){
+        for (int i = 0; i < tableNames.size(); i++) {
+            plans.add(new Plan(tableNames.get(i), tableDates.get(i), tableDays.get(i)));
+        }
     }
 
     private void configureNameColumn() {
@@ -99,10 +111,27 @@ public class YourPlansController {
     }
 
     private void configureDateColumn() {
-        dateColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getData()));
+        dateColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDate()));
     }
     private void configureDayColumn(){
         dayColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDay()));
+    }
+
+    private void searchListener(){
+        searchTextField.textProperty().addListener((observable, oldValue, newValue) ->
+                filteredPlans.setPredicate(createPredicate(newValue)));
+    }
+
+    private Predicate<Plan> createPredicate(String searchText) {
+        return plan -> {
+            if (searchText == null || searchText.isEmpty()) return true;
+            return searchFindsPlan(plan, searchText);
+        };
+    }
+
+    private boolean searchFindsPlan(Plan plan, String searchText){
+        return (plan.getName().toLowerCase().contains(searchText.toLowerCase())) ||
+                (plan.getDate().toLowerCase().contains(searchText.toLowerCase()));
     }
 
 }

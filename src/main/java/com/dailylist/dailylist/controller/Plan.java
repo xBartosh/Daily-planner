@@ -2,12 +2,12 @@ package com.dailylist.dailylist.controller;
 
 class Plan {
     private String name;
-    private String data;
+    private String date;
     private String day;
 
-    Plan(String name, String data, String day) {
+    Plan(String name, String date, String day) {
         this.name = name;
-        this.data = data;
+        this.date = date;
         this.day = day;
     }
 
@@ -19,12 +19,12 @@ class Plan {
         this.name = name;
     }
 
-    String getData() {
-        return data;
+    String getDate() {
+        return date;
     }
 
-    void setData(final String data) {
-        this.data = data;
+    void setDate(final String date) {
+        this.date = date;
     }
 
     String getDay() {

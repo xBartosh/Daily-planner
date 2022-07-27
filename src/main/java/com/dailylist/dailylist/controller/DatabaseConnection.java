@@ -5,7 +5,7 @@ import java.sql.*;
 class DatabaseConnection {
     private static final String jdbcURL = "jdbc:mysql://localhost:3306/dailyplanner";
     private static final String username = "root";
-    private static final String password = "ELG;qqNW9ThpRlz.yPPK";
+    private static final String password = "mysqlcourse1";
     private static Connection connection;
 
     DatabaseConnection(){

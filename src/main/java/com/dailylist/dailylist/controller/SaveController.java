@@ -45,7 +45,7 @@ public class SaveController {
             createAndShowAlertEmptyOrKeyWord();
             return false;
         } else {
-            String createTable = "CREATE TABLE " + nameTextField.getText() + " (time VARCHAR(5), todo VARCHAR(45));";
+            String createTable = "CREATE TABLE " + nameTextField.getText() + " (time VARCHAR(5), todo VARCHAR(45), date VARCHAR(10));";
             return createTableStatement(createTable);
         }
 
@@ -66,6 +66,7 @@ public class SaveController {
         try {
 
             Statement statement = DatabaseConnection.getConnection().createStatement();
+            statement.execute("INSERT INTO " + nameTextField.getText() + " (date) VALUES('" + CreatePlanController.actualDate +"');");
             for (int i = 0; i < CreatePlanController.hours.get(CreatePlanController.acutalTimeSchema).getTasks().size(); i++) {
                 String timeValue = createTimeValueQuery(i);
                 String todoValue = createTodoValueQuery(i);
