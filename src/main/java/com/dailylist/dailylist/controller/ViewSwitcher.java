@@ -29,7 +29,6 @@ public class ViewSwitcher {
 
             if (cache.containsKey(view)) {
                 root = cache.get(view);
-
             } else {
                 root = FXMLLoader.load(
                         ViewSwitcher.class.getResource(view.getFileName())

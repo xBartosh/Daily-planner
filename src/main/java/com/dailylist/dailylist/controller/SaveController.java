@@ -8,7 +8,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import java.sql.SQLException;
-import java.sql.SQLSyntaxErrorException;
 import java.sql.Statement;
 
 public class SaveController {
@@ -67,7 +66,7 @@ public class SaveController {
 
             Statement statement = DatabaseConnection.getConnection().createStatement();
             statement.execute("INSERT INTO " + nameTextField.getText() + " (date) VALUES('" + CreatePlanController.actualDate +"');");
-            for (int i = 0; i < CreatePlanController.hours.get(CreatePlanController.acutalTimeSchema).getTasks().size(); i++) {
+            for (int i = 0; i < CreatePlanController.hours.get(CreatePlanController.actualTimeSchema).getTasks().size(); i++) {
                 String timeValue = createTimeValueQuery(i);
                 String todoValue = createTodoValueQuery(i);
                 todoValue = correctStrings(todoValue);
@@ -91,11 +90,11 @@ public class SaveController {
     }
 
     private String createTimeValueQuery(int index) {
-        return "'" + CreatePlanController.hours.get(CreatePlanController.acutalTimeSchema).getTasks().get(index).getTime() + "'";
+        return "'" + CreatePlanController.hours.get(CreatePlanController.actualTimeSchema).getTasks().get(index).getTime() + "'";
     }
 
     private String createTodoValueQuery(int index) {
-        return "'" + CreatePlanController.hours.get(CreatePlanController.acutalTimeSchema).getTasks().get(index).getDescription() + "'";
+        return "'" + CreatePlanController.hours.get(CreatePlanController.actualTimeSchema).getTasks().get(index).getDescription() + "'";
     }
 
     private void createAndShowAlertEmptyOrKeyWord() {

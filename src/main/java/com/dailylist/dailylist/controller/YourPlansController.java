@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -72,21 +73,36 @@ public class YourPlansController {
         plansTableView.refresh();
     }
 
+    @FXML
+    void onTableClicked(MouseEvent event) throws SQLException {
+        if (event.getClickCount() == 2){
+            if(plansTableView.getSelectionModel().getSelectedItem() != null) {
+                JustPlanController.tableName = plansTableView.getSelectionModel().getSelectedItem().getName();
+                JustPlanController.date = plansTableView.getSelectionModel().getSelectedItem().getDate();
+                JustPlanController.day = plansTableView.getSelectionModel().getSelectedItem().getDay();
+                ViewSwitcher.switchTo(View.JUSTPLAN);
+                if (JustPlanController.tasks.isEmpty())
+                    JustPlanController.insertDataIntoTable();
+            }
+        }
+    }
+
     private void selectDataFromDatabaseAndAddToLists() throws SQLException {
         DatabaseMetaData metaData = DatabaseConnection.getConnection().getMetaData();
         String[] types = {"TABLE"};
         ResultSet tables = metaData.getTables(null, null, "%", types);
         Statement statement = DatabaseConnection.getConnection().createStatement();
 
-        int i =0;
         while (tables.next()) {
-            tableNames.add(tables.getString("TABLE_NAME"));
-            ResultSet resultSet = statement.executeQuery("SELECT date FROM " + tables.getString("TABLE_NAME") + " WHERE date IS NOT NULL;");
-            while (resultSet.next()){
-                tableDates.add(resultSet.getString(1));
+            if (!tables.getString("TABLE_NAME").equals("sys_config")) {
+                tableNames.add(tables.getString("TABLE_NAME"));
+                ResultSet resultSet = statement.executeQuery("SELECT date FROM " + tables.getString("TABLE_NAME") + " WHERE date IS NOT NULL;");
+                while (resultSet.next()) {
+                    tableDates.add(resultSet.getString(1));
+                }
             }
-            i++;
         }
+
         getDayFromDateAndAddToList();
     }
 

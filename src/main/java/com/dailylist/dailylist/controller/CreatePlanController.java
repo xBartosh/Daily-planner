@@ -8,12 +8,9 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.*;
 
 public class CreatePlanController {
@@ -66,12 +63,8 @@ public class CreatePlanController {
     @FXML
     Button clearButton;
 
-    TableView<Task> getPlanTable() {
-        return planTable;
-    }
-
     static Map<TimeSchema, TaskTable> hours = new EnumMap<>(TimeSchema.class);
-    static TimeSchema acutalTimeSchema;
+    static TimeSchema actualTimeSchema;
     static LocalDate actualDate;
 
     public void initialize() {
@@ -95,30 +88,14 @@ public class CreatePlanController {
     private void configureTodoColumn() {
         todoColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDescription()));
         todoColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        todoColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Task, String>>() {
-            @Override
-            public void handle(final TableColumn.CellEditEvent<Task, String> taskStringCellEditEvent) {
-                planTable.getItems()
-                        .stream()
-                        .filter(task -> task.getTime().equals(taskStringCellEditEvent.getRowValue().getTime()))
-                        .forEach(task -> {
-                            task.setDescription(taskStringCellEditEvent.getNewValue());
-                            hours.get(acutalTimeSchema)
-                                    .getTasks().stream()
-                                    .filter(task1 -> task1.getTime().equals(task.getTime()))
-                                    .forEach(task2->task2.setDescription(taskStringCellEditEvent.getNewValue()));
-                        });
-
-                planTable.refresh();
-            }
-        });
+        setOnEditCommitListener();
     }
 
 
     private void setDefaultTime() {
         TaskTable taskTable = new TaskTable(TimeSchema.HOUR2);
         planTable.setItems(taskTable.getTasks());
-        acutalTimeSchema = TimeSchema.HOUR2;
+        actualTimeSchema = TimeSchema.HOUR2;
     }
 
     public void getDate() {
@@ -130,6 +107,26 @@ public class CreatePlanController {
         System.out.println(actualDate);
     }
 
+    private void setOnEditCommitListener(){
+        todoColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Task, String>>() {
+            @Override
+            public void handle(final TableColumn.CellEditEvent<Task, String> taskStringCellEditEvent) {
+                planTable.getItems()
+                        .stream()
+                        .filter(task -> task.getTime().equals(taskStringCellEditEvent.getRowValue().getTime()))
+                        .forEach(task -> {
+                            task.setDescription(taskStringCellEditEvent.getNewValue());
+                            hours.get(actualTimeSchema)
+                                    .getTasks().stream()
+                                    .filter(task1 -> task1.getTime().equals(task.getTime()))
+                                    .forEach(task2->task2.setDescription(taskStringCellEditEvent.getNewValue()));
+                        });
+
+                planTable.refresh();
+            }
+        });
+    }
+
     private void createHours() {
         hours.put(TimeSchema.HOUR1, new TaskTable(TimeSchema.HOUR1));
         hours.put(TimeSchema.HOUR2, new TaskTable(TimeSchema.HOUR2));
@@ -139,23 +136,23 @@ public class CreatePlanController {
 
     public void onHour1() {
         setHourDiff(hours.get(TimeSchema.HOUR1));
-        acutalTimeSchema = TimeSchema.HOUR1;
+        actualTimeSchema = TimeSchema.HOUR1;
     }
 
     public void onHour2() {
         setHourDiff(hours.get(TimeSchema.HOUR2));
-        acutalTimeSchema = TimeSchema.HOUR2;
+        actualTimeSchema = TimeSchema.HOUR2;
     }
 
     public void onHour3() {
         setHourDiff(hours.get(TimeSchema.HOUR3));
-        acutalTimeSchema = TimeSchema.HOUR3;
+        actualTimeSchema = TimeSchema.HOUR3;
 
     }
 
     public void onHour6() {
         setHourDiff(hours.get(TimeSchema.HOUR6));
-        acutalTimeSchema = TimeSchema.HOUR6;
+        actualTimeSchema = TimeSchema.HOUR6;
     }
 
     public void setHourDiff(TaskTable taskTable) {
@@ -187,7 +184,7 @@ public class CreatePlanController {
                 .forEach(task -> {
                     task.setDescription("");
                 });
-        hours.get(acutalTimeSchema).getTasks().stream().forEach(task -> task.setDescription(""));
+        hours.get(actualTimeSchema).getTasks().stream().forEach(task -> task.setDescription(""));
         planTable.refresh();
     }
 }
